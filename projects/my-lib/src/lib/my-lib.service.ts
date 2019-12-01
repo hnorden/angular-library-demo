@@ -1,9 +1,10 @@
-import { Injectable } from '@angular/core';
+import { InjectionToken } from '@angular/core';
 
-@Injectable({
-  providedIn: 'root'
-})
-export class MyLibService {
+export const MY_IMPLEMENTATION = new InjectionToken<string>('MyAbstractLibServiceToken');
+
+export abstract class MyAbstractLibService {
 
   constructor() { }
+
+  public abstract getName(): string;
 }

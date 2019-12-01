@@ -1,27 +1,55 @@
-# MyWorkspace
+# Showcase: Angular library customization
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 8.3.20.
+Naturally a library is to be used by multiple applications in different scenarios. Therefore you should prevent leaking business logic into your library and keep it abstract and extendable.
 
-## Development server
+Here I demonstrate a possibility by implementing an abstract service defined and used within the library. The solution is pretty simple using Angular's dependency injection mechanism.
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+## Library: Implementation details
 
-## Code scaffolding
+The library defines the `abstract class MyAbstractLibService`. We inject this abstract service into a component of the library using an Injection-Token (here of type `InjectionToken<string>`):
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+```
+constructor(@Inject(MY_IMPLEMENTATION) private myAbstractLibService: MyAbstractLibService) { }
+```
 
-## Build
+## App: Implementation details
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `--prod` flag for a production build.
+First we implement the abstract service within the main application:
 
-## Running unit tests
+```
+class MyLibService extends MyAbstractLibService {
+    ...
+}
+```
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+Then we tell angular to manage this implementation using the defined Injection-Token:
 
-## Running end-to-end tests
+```
+providers: [
+    { provide: MY_IMPLEMENTATION, useClass: MyLibService }
+]
+```
 
-Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
+# Run instructions
 
-## Further help
+## Angular Workspace
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
+To build and run `my-app` and `my-lib` with workspace configuration:
+
+```
+git checkout master
+npm run start
+```
+
+Open [http://localhost:4200/](http://localhost:4200/).
+
+## Split builds
+
+To build and run `my-app` and `my-lib` independently I have prepared a docker-compose setup:
+
+```
+git checkout split_builds
+docker-compose up
+```
+
+Open [http://localhost:4200/](http://localhost:4200/).

@@ -1,6 +1,18 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { MyLibComponent } from './my-lib.component';
+import { MyAbstractLibService, MY_IMPLEMENTATION } from './my-lib.service';
+
+class MockLibService extends MyAbstractLibService {
+
+  constructor() { 
+    super();
+  }
+
+  public getName() {
+    return "Name: my-lib implementation";
+  }
+}
 
 describe('MyLibComponent', () => {
   let component: MyLibComponent;
@@ -8,7 +20,10 @@ describe('MyLibComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ MyLibComponent ]
+      declarations: [ MyLibComponent ],
+      providers: [
+        { provide: MY_IMPLEMENTATION, useClass: MockLibService }
+      ]  
     })
     .compileComponents();
   }));
