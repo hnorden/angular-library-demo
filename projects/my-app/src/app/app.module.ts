@@ -2,7 +2,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 
 import { AppComponent } from './app.component';
-import { MyLibModule, MY_IMPLEMENTATION } from 'projects/my-lib/src/public-api';
+import { MyLibModule, MY_IMPLEMENTATION } from 'my-lib';
 import { MyLibService } from './my-lib.service';
 
 @NgModule({

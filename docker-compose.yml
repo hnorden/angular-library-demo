@@ -1,0 +1,82 @@
+version: '3.2'
+services:
+  my-lib:
+    image: node:12.9.0
+    # user: 'node'
+    working_dir: /home/node/app
+    # environment:
+    #   - NODE_ENV=production
+    volumes:
+      - type: bind
+        source: ./projects/my-lib/
+        target: /home/node/app
+      - type: bind
+        source: ./projects/dist/
+        target: /home/node/dist
+    expose:
+      - '8081'
+    command: >
+      /bin/bash -c
+      "
+      id && pwd
+      && npm install
+      && exec npm run watch
+      "
+  my-lib-setup:
+    image: docker/compose:1.24.1
+    volumes:
+      - type: bind
+        source: /var/run/docker.sock
+        target: /var/run/docker.sock
+      - type: bind
+        source: ./docker-compose.yml
+        target: /docker-compose.yml
+      - type: bind
+        source: ./.env
+        target: /.env
+    entrypoint: ''
+    command:
+      - /bin/sh
+      - -ce
+      - |
+        docker ps
+        docker-compose ps
+        # apk --no-cache add jq
+        ( docker-compose logs --follow --tail 2 my-lib & ) | grep -q 'Compilation complete.'
+        docker-compose exec -T my-app touch /tmp/my-lib-has-been-built
+        echo "continue..."
+    depends_on:
+      - my-lib
+      - my-app
+  my-app:
+    image: node:12.9.0
+    # user: 'node'
+    working_dir: /home/node/app
+    # environment:
+    #   - NODE_ENV=production
+    volumes:
+      - type: bind
+        source: ./projects/my-app/
+        target: /home/node/app
+      - type: bind
+        source: ./projects/dist/
+        target: /var/dist
+    expose:
+      - '4200'
+    ports:
+      - 4200:4200
+    command: >
+      /bin/bash -c
+      "
+      id && pwd
+      && npm install
+      && while [ ! -f /tmp/my-lib-has-been-built ]; do sleep 2; done
+      && echo \"Creating symlink to my-lib\"
+      && mkdir -p ./node_modules
+      && pushd ./node_modules
+      && ln -sfnv /var/dist/my-lib my-lib
+      && popd
+      && exec npm run start
+      "
+    depends_on:
+      - my-lib

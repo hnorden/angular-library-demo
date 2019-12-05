@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { MyAbstractLibService } from 'projects/my-lib/src/public-api';
+import { MyAbstractLibService } from 'my-lib';
 
 @Injectable({
   providedIn: 'root'

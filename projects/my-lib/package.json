@@ -1,8 +1,25 @@
 {
   "name": "my-lib",
   "version": "0.0.1",
-  "peerDependencies": {
+  "scripts": {
+    "ng": "ng",
+    "start": "ng serve",
+    "build": "ng build",
+    "watch": "ng build --watch",
+    "test": "ng test",
+    "lint": "ng lint",
+    "e2e": "ng e2e"
+  },
+  "devDependencies": {
+    "@angular-devkit/build-angular": "~0.803.20",
+    "@angular-devkit/build-ng-packagr": "~0.803.20",
+    "@angular/cli": "~8.3.20",
+    "@angular/compiler-cli": "~8.2.14",
     "@angular/common": "^8.2.14",
-    "@angular/core": "^8.2.14"
+    "@angular/compiler": "~8.2.14",
+    "@angular/core": "^8.2.14",
+    "ng-packagr": "^5.4.0",
+    "tsickle": "^0.37.0",
+    "typescript": "~3.5.3"
   }
 }
